@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monthly Chute Inspection Dashboard - November 2026</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#182230;--muted:#667085;--line:#e5e9f0;--blue:#2563eb;--green:#15803d;--red:#dc2626;--amber:#d97706}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
+header{background:#14243a;color:white;padding:26px clamp(18px,4vw,48px)}
+header .eyebrow{color:#b8c8df;text-transform:uppercase;letter-spacing:1.5px;font-size:11px;font-weight:bold}
+h1{font-size:clamp(23px,3vw,32px);margin:5px 0 3px}header p{margin:0;color:#d4deeb}
+.wrap{max-width:1400px;margin:auto;padding:24px clamp(14px,3vw,36px) 42px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.pill{background:#e8eef8;color:#27456d;padding:7px 12px;border-radius:20px;font-weight:bold;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:0 2px 8px #172b4d08}
+.metric-label{color:var(--muted);font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px}
+.metric{font-size:32px;font-weight:750;margin-top:5px}.metric-sub{font-size:12px;color:var(--muted)}
+.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}
+.grid{display:grid;grid-template-columns:1.1fr 1.9fr;gap:16px;margin-bottom:18px}
+h2{font-size:16px;margin:0 0 14px}.chartrow{display:flex;align-items:center;gap:12px;margin:15px 0}
+.chartlabel{width:105px;color:#475467;font-size:13px}.barbg{height:11px;border-radius:20px;background:#eef1f5;flex:1;overflow:hidden}
+.bar{height:100%;border-radius:20px}.bar.green{background:#16a34a}.bar.red{background:#dc2626}.bar.amber{background:#f59e0b}
+.chartnum{width:25px;text-align:right;font-weight:bold}
+.insight{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:#475467;margin-top:14px;font-size:13px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px}
+input,select{border:1px solid #d0d5dd;background:#fff;border-radius:8px;padding:10px 12px;font:inherit;color:var(--ink)}
+input{min-width:220px;flex:1}select{min-width:150px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+table{width:100%;border-collapse:collapse;background:white;min-width:760px}
+th{background:#f8fafc;text-align:left;color:#475467;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:12px 14px}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#fafcff}.status{display:inline-block;border-radius:20px;padding:4px 9px;font-size:11px;font-weight:bold;white-space:nowrap}
+.status.ok{background:#dcfce7;color:#166534}.status.maintenance{background:#fee2e2;color:#991b1b}.status.monitor{background:#fef3c7;color:#92400e}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+button{border:0;background:var(--blue);color:white;padding:10px 14px;border-radius:8px;font-weight:bold;cursor:pointer}
+button.secondary{background:#e9eef6;color:#243b5a}button:hover{filter:brightness(.96)}
+.small{font-size:12px;color:var(--muted)}.empty{text-align:center;color:var(--muted);padding:28px}
+footer{text-align:center;color:#98a2b3;font-size:11px;padding-top:22px}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:440px){.cards{grid-template-columns:1fr 1fr}.metric{font-size:26px}.card{padding:13px}}
+@media print{body{background:white}.controls,.actions button{display:none}.wrap{max-width:none;padding:12px}header{padding:18px}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Civil &amp; Structural · Monthly Inspection</div>
+  <h1>Chute Inspection Dashboard</h1>
+  <p>November 2026 · Inspection date: 1 November 2026</p>
+</header>
+<main class="wrap">
+  <div class="topline">
+    <span class="pill">19 equipment / locations inspected</span>
+    <span class="small">Inspection overview and maintenance follow-up</span>
+  </div>
+
+  <section class="cards">
+    <div class="card"><div class="metric-label">Total inspected</div><div class="metric">19</div><div class="metric-sub">Equipment / locations</div></div>
+    <div class="card"><div class="metric-label">In good condition</div><div class="metric green" id="okMetric">8</div><div class="metric-sub" id="okPct">42% of inspected</div></div>
+    <div class="card"><div class="metric-label">Maintenance required</div><div class="metric red" id="maintMetric">9</div><div class="metric-sub" id="maintPct">47% of inspected</div></div>
+    <div class="card"><div class="metric-label">Monitor</div><div class="metric amber" id="monitorMetric">2</div><div class="metric-sub" id="monitorPct">11% of inspected</div></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Inspection status</h2>
+      <div class="chartrow"><div class="chartlabel">OK</div><div class="barbg"><div class="bar green" style="width:42.1%"></div></div><div class="chartnum">8</div></div>
+      <div class="chartrow"><div class="chartlabel">Maintenance</div><div class="barbg"><div class="bar red" style="width:47.4%"></div></div><div class="chartnum">9</div></div>
+      <div class="chartrow"><div class="chartlabel">Monitor</div><div class="barbg"><div class="bar amber" style="width:10.5%"></div></div><div class="chartnum">2</div></div>
+      <div class="insight"><strong>Key observation:</strong> 11 locations (58%) require maintenance or monitoring follow-up.</div>
+    </div>
+    <div class="card">
+      <h2>Key maintenance findings</h2>
+      <div class="chartrow"><div class="chartlabel">TIVAR worn / thinning</div><div class="barbg"><div class="bar red" style="width:100%"></div></div><div class="chartnum">10</div></div>
+      <div class="chartrow"><div class="chartlabel">Rubber / impact curtain</div><div class="barbg"><div class="bar amber" style="width:40%"></div></div><div class="chartnum">4</div></div>
+      <div class="chartrow"><div class="chartlabel">Sand clearance</div><div class="barbg"><div class="bar amber" style="width:10%"></div></div><div class="chartnum">1</div></div>
+      <p class="small">Counts are based on the inspection notes; one location may have more than one finding.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="actions">
+      <div><h2 style="margin-bottom:3px">Inspection register</h2><div class="small">Search equipment, filter by status, and print the register.</div></div>
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search equipment or finding..." aria-label="Search inspection register">
+      <select id="statusFilter" aria-label="Filter by status">
+        <option value="all">All statuses</option><option value="OK">OK</option><option value="Maintenance">Maintenance</option><option value="Monitor">Monitor</option>
+      </select>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>No.</th><th>Equipment / Location</th><th>Inspection findings</th><th>Status</th></tr></thead>
+        <tbody id="register"></tbody>
+      </table>
+    </div>
+    <div class="actions"><span class="small" id="resultCount">Showing 19 of 19 locations</span><button class="secondary" onclick="resetFilters()">Reset filters</button></div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <h2>Recommended follow-up</h2>
+    <ol style="padding-left:20px;margin:0;color:#475467">
+      <li style="margin:8px 0"><strong>Prioritise replacement:</strong> Attend to worn-out TIVAR, rubber curtains and impact curtains to prevent further deterioration.</li>
+      <li style="margin:8px 0"><strong>Clearance / maintenance:</strong> Address the sand clearance issue at the Trash Screen and inspect the affected TIVAR.</li>
+      <li style="margin:8px 0"><strong>Monitor condition:</strong> Check TIVAR thickness at CY404 A and CY404 B during the next inspection.</li>
+    </ol>
+  </section>
+  <footer>Monthly Checklist · November 2026</footer>
+</main>
+<script>
+const records = [
+[1,"Tripper Car CV302","Rubber curtain and TIVAR worn out at west side","Maintenance"],
+[2,"CV302 Tail Chute","No defects observed","OK"],
+[3,"Trash Screen","Impact curtain inside TS worn out; TIVAR requires maintenance due to sand clearance","Maintenance"],
+[4,"SC302 A","No defects observed","OK"],
+[5,"SC302 B","No defects observed","OK"],
+[6,"SC302 C","No defects observed","OK"],
+[7,"SC302 D","No defects observed","OK"],
+[8,"SC303","No defects observed","OK"],
+[9,"SU401","TIVAR worn out at reflector and zig-zag plate","Maintenance"],
+[10,"HPGR CV403 Discharge Chute","TIVAR and rubber curtain worn out","Maintenance"],
+[11,"Chute CV404","TIVAR Section 1 worn out","Maintenance"],
+[12,"SC401 A Chute","No defects observed","OK"],
+[13,"SC401 B Chute","No defects observed","OK"],
+[14,"SC401 C Chute","TIVAR worn out; rubber liner in good condition","Maintenance"],
+[15,"HPGR Hopper","TIVAR at reflector worn out","Maintenance"],
+[16,"CY404 A","TIVAR thinning","Monitor"],
+[17,"CY404 B","TIVAR thinning","Monitor"],
+[18,"Surge Bin CV402","TIVAR worn out","Maintenance"],
+[19,"CY405","Rubber curtain worn out; TIVAR at reflector worn out","Maintenance"]
+];
+const tbody=document.getElementById('register');
+function render(){
+ const q=document.getElementById('search').value.toLowerCase();
+ const f=document.getElementById('statusFilter').value;
+ const filtered=records.filter(r=>(f==='all'||r[3]===f)&&r.slice(1,3).join(' ').toLowerCase().includes(q));
+ tbody.innerHTML=filtered.length?filtered.map(r=>`<tr><td>${r[0]}</td><td><strong>${r[1]}</strong></td><td>${r[2]}</td><td><span class="status ${r[3].toLowerCase()}">${r[3]}</span></td></tr>`).join(''):'<tr><td colspan="4" class="empty">No matching inspection records.</td></tr>';
+ document.getElementById('resultCount').textContent=`Showing ${filtered.length} of ${records.length} locations`;
+}
+function resetFilters(){document.getElementById('search').value='';document.getElementById('statusFilter').value='all';render()}
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('statusFilter').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
